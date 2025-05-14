@@ -52,7 +52,7 @@ public class QuestionDto {
     }
 
     public static QuestionDto fromEntity(Question question){
-        return new Question(
+        return new QuestionDto(
                 question.getId(),
                 question.getName(),
                 question.getDescription(),
