@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.models.entities.Question;
+import com.example.demo.models.entities.Vote;
 import com.example.demo.repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,10 +36,29 @@ public class QuestionService {
             .map(question -> {
                 return questionRepository.save(updatedQuestion);
             })
-            .orElseThrow(() -> new RuntimeException("Question not found with id: " + id));
+            .orElseThrow(() -> new RuntimeException("Nie znaleziona zapytania z ID: " + id));
     }
 
     public void delete(Integer id) {
         questionRepository.deleteById(id);
+    }
+
+    public Question vote(Integer id, String ipAddress, boolean voteType) {
+        if (questionRepository.hasUserVoted(id, ipAddress)) {
+            throw new RuntimeException("User has already voted on this question");
+        }
+
+        return questionRepository.findById(id)
+            .map(question -> {
+                if (voteType) {
+                    question.incrementYesVote();
+                } else {
+                    question.incrementNoVote();
+                }
+                Vote vote = new Vote(question, ipAddress, voteType);
+                question.getVotes().add(vote);
+                return questionRepository.save(question);
+            })
+            .orElseThrow(() -> new RuntimeException("Question not found with ID: " + id));
     }
 }

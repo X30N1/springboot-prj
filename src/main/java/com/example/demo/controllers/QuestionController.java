@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.models.dtos.QuestionDto;
 import com.example.demo.models.entities.Question;
 import com.example.demo.services.QuestionService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,5 +54,17 @@ public class QuestionController {
     public ResponseEntity<Void> deleteQuestion(@PathVariable Integer id) {
         questionService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/vote/yes")
+    public ResponseEntity<QuestionDto> voteYes(@PathVariable Integer id, HttpServletRequest request) {
+        Question voted = questionService.vote(id, request.getRemoteAddr(), true);
+        return ResponseEntity.ok(QuestionDto.fromEntity(voted));
+    }
+
+    @PostMapping("/{id}/vote/no")
+    public ResponseEntity<QuestionDto> voteNo(@PathVariable Integer id, HttpServletRequest request) {
+        Question voted = questionService.vote(id, request.getRemoteAddr(), false);
+        return ResponseEntity.ok(QuestionDto.fromEntity(voted));
     }
 }
