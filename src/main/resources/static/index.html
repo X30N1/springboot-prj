@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Pytań i Głosowania</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>System Pytań i Głosowania</h1>
+        <button id="add-question-btn" class="btn btn-primary">
+            <span class="icon">+</span>
+            Dodaj Pytanie
+        </button>
+    </header>
+
+    <!-- Komunikaty -->
+    <div id="main-error" class="alert alert-error hidden"></div>
+    <div id="main-success" class="alert alert-success hidden"></div>
+
+    <!-- Loader -->
+    <div id="loader" class="loader hidden">
+        <div class="spinner"></div>
+        <p>Ładowanie...</p>
+    </div>
+
+    <!-- Lista pytań -->
+    <main class="main-content">
+        <div id="questions-container" class="questions-container">
+            <!-- Pytania będą dodawane dynamicznie przez JavaScript -->
+        </div>
+    </main>
+
+    <!-- Modal dodawania pytania -->
+    <div id="add-question-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Dodaj Nowe Pytanie</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="add-question-error" class="alert alert-error hidden"></div>
+            <form id="question-form" class="form">
+                <div class="form-group">
+                    <label for="question-name">Nazwa pytania:</label>
+                    <input type="text" id="question-name" name="name" required maxlength="255">
+                </div>
+                <div class="form-group">
+                    <label for="question-description">Opis pytania:</label>
+                    <textarea id="question-description" name="description" required rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="question-end-time">Termin zakończenia (opcjonalnie):</label>
+                    <input type="datetime-local" id="question-end-time" name="endtime">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Dodaj Pytanie</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal edycji pytania -->
+    <div id="edit-question-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edytuj Pytanie</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="edit-question-error" class="alert alert-error hidden"></div>
+            <form id="edit-question-form" class="form">
+                <input type="hidden" id="edit-question-id">
+                <div class="form-group">
+                    <label for="edit-question-name">Nazwa pytania:</label>
+                    <input type="text" id="edit-question-name" name="name" required maxlength="255">
+                </div>
+                <div class="form-group">
+                    <label for="edit-question-description">Opis pytania:</label>
+                    <textarea id="edit-question-description" name="description" required rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-question-end-time">Termin zakończenia (opcjonalnie):</label>
+                    <input type="datetime-local" id="edit-question-end-time" name="endtime">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zapisz Zmiany</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal potwierdzenia usunięcia -->
+    <div id="delete-confirmation-modal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>Potwierdzenie</h2>
+            </div>
+            <div class="modal-body">
+                <p>Czy na pewno chcesz usunąć to pytanie?</p>
+                <p class="text-muted">Ta operacja jest nieodwracalna.</p>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancel-delete">Anuluj</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete">Usuń</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
