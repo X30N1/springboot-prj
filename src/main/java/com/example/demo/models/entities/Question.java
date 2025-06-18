@@ -81,4 +81,16 @@ public class Question {
     public void incrementNoVote() {
         this.novote++;
     }
+    
+    public void decrementYesVote() {
+        if (this.yesvote > 0) {
+            this.yesvote--;
+        }
+    }
+    
+    public void decrementNoVote() {
+        if (this.novote > 0) {
+            this.novote--;
+        }
+    }
 }

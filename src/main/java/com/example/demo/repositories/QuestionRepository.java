@@ -7,10 +7,14 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
+    
     @Query("SELECT COUNT(v) > 0 FROM Vote v WHERE v.question.id = ?1 AND v.ipAddress = ?2")
     boolean hasUserVoted(Integer questionId, String ipAddress);
-}
     
+    @Query("SELECT v.voteType FROM Vote v WHERE v.question.id = ?1 AND v.ipAddress = ?2")
+    Optional<Boolean> getUserVoteType(Integer questionId, String ipAddress);
+}

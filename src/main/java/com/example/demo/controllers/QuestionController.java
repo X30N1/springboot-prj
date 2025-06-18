@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -66,5 +67,37 @@ public class QuestionController {
     public ResponseEntity<QuestionDto> voteNo(@PathVariable Integer id, HttpServletRequest request) {
         Question voted = questionService.vote(id, request.getRemoteAddr(), false);
         return ResponseEntity.ok(QuestionDto.fromEntity(voted));
+    }
+    
+    @GetMapping("/{id}/vote-status")
+    public ResponseEntity<Object> getVoteStatus(@PathVariable Integer id, HttpServletRequest request) {
+        String ipAddress = request.getRemoteAddr();
+        boolean hasVoted = questionService.hasUserVoted(id, ipAddress);
+        
+        if (!hasVoted) {
+            return ResponseEntity.ok(new VoteStatusResponse(false, null));
+        }
+        
+        Optional<Boolean> voteType = questionService.getUserVoteType(id, ipAddress);
+        return ResponseEntity.ok(new VoteStatusResponse(true, voteType.orElse(null)));
+    }
+    
+    // Klasa pomocnicza dla odpowiedzi statusu głosu
+    public static class VoteStatusResponse {
+        private boolean hasVoted;
+        private Boolean voteType; // true = yes, false = no, null = no vote
+        
+        public VoteStatusResponse(boolean hasVoted, Boolean voteType) {
+            this.hasVoted = hasVoted;
+            this.voteType = voteType;
+        }
+        
+        public boolean isHasVoted() {
+            return hasVoted;
+        }
+        
+        public Boolean getVoteType() {
+            return voteType;
+        }
     }
 }
